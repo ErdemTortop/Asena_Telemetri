@@ -1,0 +1,194 @@
+﻿<Window x:Class="Telemetri_tasarım_denemesi.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Telemetri_tasarım_denemesi"
+
+        
+        WindowStyle="None"
+        AllowsTransparency="True" 
+    
+        
+        mc:Ignorable="d"
+        FontFamily="Segoe UI Semibold"
+        Title="Asena Telemetri" Height="840" Width="1400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Icon="/SolarIcon.png" >
+
+
+
+    <Window.Resources>
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="25,0,0,25" BorderThickness="1,1,0,1" BorderBrush="#262835" >
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FE6915" />
+                                <Setter TargetName="border" Property="Background" Value="#131921"/>
+                                <!--Eğer Butonlar Renkli Olsun dersen-->
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#0D1117" />
+                                <!--Eğer Butonlar Renkli Olsun dersen-->
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CloseButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                        CornerRadius="5" BorderThickness="1" BorderBrush="Transparent" Padding="3">
+                            <Image x:Name="icon" Source="/images/icons/cross.png" Opacity="0.6"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="icon" Property="Opacity" Value="1"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#55FFFFFF"/>
+                                <Setter TargetName="border" Property="Background" Value="#22FFFFFF"/>
+                                <Setter TargetName="icon" Property="Source" Value="/images/icons/cross_red.png"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#44FF4444"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MinButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                CornerRadius="5" BorderThickness="1" BorderBrush="Transparent" Padding="3">
+                            <Image x:Name="icon" Source="/images/icons/remove.png" Opacity="0.6"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="icon" Property="Opacity" Value="1"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#55FFFFFF"/>
+                                <Setter TargetName="border" Property="Background" Value="#22FFFFFF"/>
+                                <Setter TargetName="icon" Property="Source" Value="/images/icons/remove_red.png"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#44FF4444"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+    <Grid>
+        <Border BorderBrush="#262835" BorderThickness="0,2,2,2">
+            <Grid>
+
+                <Grid.Background>
+                    <LinearGradientBrush StartPoint ="0,0" EndPoint="1,1">
+                        <GradientStop Color="#14191F" Offset="0" />
+                        <GradientStop Color="#14191F" Offset="0.3" />
+                        <GradientStop Color="#FF0F1314" Offset="0.5" />
+                    </LinearGradientBrush>
+                </Grid.Background>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                
+
+                <Border>
+                    <Border Background="#262835" BorderThickness="2,2,0,2" BorderBrush="#262835">
+
+                        <Grid > 
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="80"/>
+                                <RowDefinition Height="80"/>
+                                <RowDefinition Height="80"/>
+                                <RowDefinition Height="250"/>
+                                <RowDefinition Height="80"/>
+                                <RowDefinition Height="80"/>
+
+                            </Grid.RowDefinitions>
+                            <Border x:Name="SolarBorder" CornerRadius="25,0,0,25" BorderBrush="Black" BorderThickness="0" Grid.Column="0" Grid.Row="0">
+                                <Button Style="{StaticResource NavButtonStyle}" x:Name="SolarButon" Click="SolarTeam_Click" >
+                                    <Image Source="/images/icons/SolarPng - file.png" Height="100" Width="100"/>
+                                </Button>
+                            </Border>
+
+                            <Border BorderBrush="Black" BorderThickness="0" Grid.Column="0" Grid.Row="1">
+                                <TextBox TextWrapping="Wrap" Text="Solar Team" Background="#FF262835" Foreground="#FFE2E8F0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" SelectionBrush="{x:Null}" SelectionTextBrush="{x:Null}" BorderBrush="{x:Null}" IsEnabled="False"/>
+
+                            </Border>
+
+                            <Border x:Name="UsbBorder" BorderBrush="#3D3D4E"  CornerRadius="25,0,0,25"  BorderThickness="0" Grid.Column="0" Grid.Row="2">
+                                <Button  Click="Usb_Click" x:Name="UsbButon" Style="{StaticResource NavButtonStyle}">
+                                    <Image Source="/images/icons/usb.png" Width="40" Height="40"/>
+                                </Button>
+
+                            </Border>
+
+                            <Border x:Name="dataBorder" CornerRadius="25,0,0,25" BorderBrush="#3D3D4E"  BorderThickness="0" Grid.Column="0" Grid.Row="3">
+                                <Button Style="{StaticResource NavButtonStyle}" x:Name="DataButon" Click="Data_Click" >
+                                    <Image Source="/images/icons/deadline.png" Width="40" Height="40"/>
+                                </Button>
+                            </Border>
+
+                            <Border x:Name="RecordBorder" CornerRadius="25,0,0,25" BorderBrush="#3D3D4E"  BorderThickness="0" Grid.Column="0" Grid.Row="4">
+                                <Button Style="{StaticResource NavButtonStyle}" x:Name="RecordButon" Click="Record_Click" >
+                                    <Image Source="/images/icons/camera.png" Width="30" Height="30"/>
+                                </Button>
+                            </Border>
+
+                            <Border x:Name="HomeBorder" CornerRadius="25,0,0,25" BorderBrush="#3D3D4E"  BorderThickness="0" Grid.Column="0" Grid.Row="6">
+                                <Button Style="{StaticResource NavButtonStyle}" x:Name="HomeButon" Click="Home_Click" >
+                                    <Image Source="/images/icons/home.png" Width="40" Height="40"/>
+                                </Button>
+                            </Border>
+
+                        </Grid>
+
+                    </Border>
+
+                </Border>
+
+                <Frame x:Name="MainFrame" Grid.Column="1" 
+                  Background="Transparent" NavigationUIVisibility="Hidden" Navigated="MainFrame_Navigated"/>
+                <!--Eğer grandyan istersek background silmeyi unutma Background="#14191F"-->
+                
+                <Border  Grid.Column="1" Margin="1271,10,9,809" >
+                    <Button Style="{StaticResource CloseButton}" Margin="-9,0,0,-7" Click="Close_Click"/>
+                </Border>
+
+                <Border  Grid.Column="1" Margin="1267,12,13,807" >
+                    <Button Style="{StaticResource MinButton}" Margin="-33,-1,28,-3" Click="Min_Click"/>
+                </Border>
+
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
