@@ -29,7 +29,7 @@ namespace Telemetri_tasarım_denemesi
         }
 
 
-        private async Task UyarıBlink(string fisrtColor, string secondColor, string lastColor, int reapet = 3)
+        private async Task UyarıBlink(string fisrtColor, string secondColor, string lastColor)
         {
             BaglantıDurumuLblRenk.Background = (Brush)new BrushConverter().ConvertFrom(fisrtColor);
             await Task.Delay(300);
@@ -57,6 +57,7 @@ namespace Telemetri_tasarım_denemesi
             RateBox.Items.Add("115200");
             RateBox.Items.Add("19200");
             RateBox.Items.Add("57600");
+            
 
             if (AppState.SerialPort != null && AppState.SerialPort.IsOpen)
             {
@@ -67,11 +68,11 @@ namespace Telemetri_tasarım_denemesi
             {
                 PortComboBox.SelectedItem = AppState.SecilenPort;
             }
+            
             if (AppState.SecilenRate != null)
             {
                 RateBox.SelectedItem = AppState.SecilenRate;
             }
-
         }
 
         private async void PortBaglanButon_Click(object sender, RoutedEventArgs e)
@@ -84,7 +85,6 @@ namespace Telemetri_tasarım_denemesi
                 {
                     if (AppState.SerialPort == null || !AppState.SerialPort.IsOpen)
                     {
-
                         string portDeger = PortComboBox.SelectedItem.ToString();
                         int rateDeger = int.Parse(RateBox.SelectedItem.ToString());
                         AppState.SecilenPort = portDeger;
@@ -96,7 +96,9 @@ namespace Telemetri_tasarım_denemesi
                     }
                     else
                     {
-                        await UyarıBlink("#E6B84A", "#262835", "#4CAF7D", 3);
+                        MessageBox.Show("Dostum, seçtiğin port doluymuş zaten.");
+
+                        await UyarıBlink("#E6B84A", "#262835", "#4CAF7D");
 
                       /*  BaglantıDurumuLblRenk.Background = (Brush)new BrushConverter().ConvertFrom("#E6B84A");
                         await Task.Delay(300);
@@ -116,7 +118,9 @@ namespace Telemetri_tasarım_denemesi
                 else
                 {
 
-                    await UyarıBlink("#E6B84A", "#262835", "#E05C5C", 3);
+                    MessageBox.Show("Dostum, ya baud rate seçmedin yada port seçmedin.", "Error  ");
+
+                    await UyarıBlink("#E6B84A", "#262835", "#E05C5C" );
 
                     /*BaglantıDurumuLblRenk.Background = (Brush)new BrushConverter().ConvertFrom("#E6B84A");
                     await Task.Delay(300);
@@ -140,7 +144,7 @@ namespace Telemetri_tasarım_denemesi
 
                 MessageBox.Show(ex.Message,"Ufak Bir hata oluştu");
 
-                await UyarıBlink("#E6B84A", "#262835", "#E05C5C", 3);
+                await UyarıBlink("#E6B84A", "#262835", "#E05C5C");
 
                /* BaglantıDurumuLblRenk.Background = (Brush)new BrushConverter().ConvertFrom("#E6B84A");
                 await Task.Delay(300);
@@ -175,7 +179,9 @@ namespace Telemetri_tasarım_denemesi
                 }
                 else
                 {
-                    await UyarıBlink("#E6B84A", "#262835", "#E05C5C", 3);
+                    MessageBox.Show("Dostum, daha port seçmedin ki");
+
+                    await UyarıBlink("#E6B84A", "#262835", "#E05C5C");
 
                    /* BaglantıDurumuLblRenk.Background = (Brush)new BrushConverter().ConvertFrom("#E6B84A");
                     await Task.Delay(300);
@@ -198,7 +204,7 @@ namespace Telemetri_tasarım_denemesi
 
                 MessageBox.Show(ex.Message, "Ufak Bir hata oluştu");
 
-                await UyarıBlink("#E6B84A", "#262835", "#E05C5C", 3);
+                await UyarıBlink("#E6B84A", "#262835", "#E05C5C");
 
                 /*BaglantıDurumuLblRenk.Background = (Brush)new BrushConverter().ConvertFrom("#E6B84A");
                 await Task.Delay(300);

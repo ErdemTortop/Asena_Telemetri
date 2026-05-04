@@ -19,7 +19,7 @@ namespace Telemetri_tasarım_denemesi
         public MainWindow()
         {
             InitializeComponent();
-            MainFrame.Navigate(new HomaPage());
+            MainFrame.Navigate(new HomePage());
             SolarBorder.Background = Brushes.Transparent;
             UsbBorder.Background = Brushes.Transparent;
             dataBorder.Background = Brushes.Transparent;
@@ -71,7 +71,7 @@ namespace Telemetri_tasarım_denemesi
 
         private void Home_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new HomaPage());
+            MainFrame.Navigate(new HomePage());
             SolarBorder.Background = Brushes.Transparent;
             UsbBorder.Background = Brushes.Transparent;
             dataBorder.Background = Brushes.Transparent;
@@ -86,12 +86,31 @@ namespace Telemetri_tasarım_denemesi
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            if (AppState.RecordFlag == true)
+            {
+                MessageBox.Show("Hâlâ kayıt yapılmaktadır", "Uyarı !", MessageBoxButton.OK);
+            }
+            else
+            {
+               if (MessageBox.Show("Kapatmak istediğinize emin misiniz?", "Uyarı!", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+               {
+                this.Close();
+               } 
+            }
+
+            
+            
         }
 
         private void Min_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+                this.DragMove();
         }
     }
 }

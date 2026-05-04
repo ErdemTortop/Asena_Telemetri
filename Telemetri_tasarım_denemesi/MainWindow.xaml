@@ -16,7 +16,7 @@
 
 
 
-    <Window.Resources>
+    <Window.Resources >
         <Style x:Key="NavButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -100,7 +100,7 @@
 
     </Window.Resources>
     <Grid>
-        <Border BorderBrush="#262835" BorderThickness="0,2,2,2">
+        <Border BorderBrush="#262835" BorderThickness="0,2,2,2"  MouseLeftButtonDown="Window_MouseLeftButtonDown">
             <Grid>
 
                 <Grid.Background>

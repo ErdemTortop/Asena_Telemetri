@@ -30,7 +30,6 @@ namespace Telemetri_tasarım_denemesi
         public DataPage()
         {
             InitializeComponent();
-
         }
 
         private void DataPage_Loaded(object sender, RoutedEventArgs e)
@@ -46,7 +45,7 @@ namespace Telemetri_tasarım_denemesi
             });
 
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(100);
+            timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += Timer_Tick;
             timer.Start();
         }

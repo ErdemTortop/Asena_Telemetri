@@ -18,11 +18,11 @@ namespace Telemetri_tasarım_denemesi
     /// <summary>
     /// Interaction logic for HomaPage.xaml
     /// </summary>
-    public partial class HomaPage : Page
+    public partial class HomePage : Page
     {
-        public HomaPage()
+        public HomePage()
         {
-            InitializeComponent();
+            InitializeComponent();  
         }
     }
 }

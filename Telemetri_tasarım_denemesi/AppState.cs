@@ -25,32 +25,93 @@ namespace Telemetri_tasarım_denemesi
 
         public static bool RecordFlag;
 
-        public static string dosyaYolu = "telemetri_log.csv";
+        public static string dosyaYolu;
 
+        public static string KayıtDosya;
+
+        public static string ExKayıtDosya;
+
+        public static bool BaslıkYazıldi = false;
+
+        public static int KayıtSayaci = 0;
+
+        public static string TopluYazi;
+
+        public static string YeniSatırlar;
+
+        public static System.Diagnostics.Stopwatch AracStopWatch = new System.Diagnostics.Stopwatch();
+
+        public static bool IlkVeriGeldi = false;
+
+        public static List<string> BekleyenSatırlar = new List<string>();
 
         public static string KayitYap()
-
         {
-            try {
+            try 
+            {
+                if (RecordFlag == false)
+                {
+                    return "";
+                }
+
+                
+
+                if (BaslıkYazıldi == false)
+                {
+                    KayıtDosya = dosyaYolu;
+                    ExKayıtDosya = dosyaYolu;
+                    BaslıkYazıldi = true;
+                    BekleyenSatırlar.Add ("Zaman_ms; Zaman_Clcok; hiz_kmh; V_bat_C; T_bat_C; kalan_enerji_Wh");
+                }
+
+                   YeniSatırlar = 
+                    $"{AracStopWatch.ElapsedMilliseconds} ms;" +
+                    $"{DateTime.Now:HH:mm:ss};" +
+                    $"{AppState.hiz} km/h;" + 
+                    $"{AppState.voltaj} V;" +
+                    $"{AppState.sicaklik} °C;" +
+                    $"{AppState.enerji} wh";
+                BekleyenSatırlar.Add(YeniSatırlar);
+                KayıtSayaci ++;
+
+                if (KayıtSayaci >= 15)
+                {
+                    TopluYazi = string.Join("\n", BekleyenSatırlar) + "\n";
+                    File.AppendAllText(KayıtDosya, TopluYazi, System.Text.Encoding.UTF8);
+                    BekleyenSatırlar.Clear();
+                    KayıtSayaci = 0;
+                }
+                return YeniSatırlar; 
+            }
+            catch (Exception ex)
+            {
+                 MessageBox.Show(ex.Message, "Hata");
+                return"";
+            }
+           /* try {
 
                 string satir = "";
                 if (RecordFlag == true)
                 {
-                    if (!File.Exists(dosyaYolu))
+                    if (!File.Exists(KayıtDosya))
                     {
-                        satir = "Zaman; Hiz; Voltaj; Sıcaklık; Enerji\n";
 
-                        File.AppendAllText(dosyaYolu, satir, System.Text.Encoding.UTF8);
+                        KayıtDosya = dosyaYolu;
 
+                        ExKayıtDosya = KayıtDosya;
+                        
+                        satir = "Zaman_ms; hiz_kmh; V_bat_C; T_bat_C; kalan_enerji_Wh\n";
 
+                        File.AppendAllText(KayıtDosya, satir, System.Text.Encoding.UTF8);
 
                         satir = $"{DateTime.Now:HH:mm:ss}; {AppState.hiz} km/h; {AppState.voltaj} V; {AppState.sicaklik} °C; {AppState.enerji} wh\n";
-                        File.AppendAllText(dosyaYolu, satir, System.Text.Encoding.UTF8);
+                        
+                        File.AppendAllText(KayıtDosya, satir, System.Text.Encoding.UTF8);
                     }
                     else
                     {
                         satir = $"{DateTime.Now:HH:mm:ss}; {AppState.hiz} km/h; {AppState.voltaj} V; {AppState.sicaklik} °C; {AppState.enerji} wh\n";
-                        File.AppendAllText(dosyaYolu, satir, System.Text.Encoding.UTF8);
+                        File.AppendAllText(KayıtDosya, satir, System.Text.Encoding.UTF8);
                     }
                 }
 
@@ -61,11 +122,11 @@ namespace Telemetri_tasarım_denemesi
             catch (Exception ex)
             {
 
-                MessageBox.Show("Selamlar, Ben Erdem. Şimdi muhtemelen programın çökmesine sebep olan bir hata ile karşılaştın. En kısa sürede getiriceğimiz bir güncelleme ile hataları ayıklicaz. Lütfen programı baştan çalıştırır mısınız? Yada muhtemelen arkada açık olan excel dosyasını kapatırsanız sorun çözülücektir :)", ex.Message);
+                MessageBox.Show(ex.Message, "Hata");
 
              
             }
-            return "";
+            return ""; */
         }
 
 
@@ -73,9 +134,14 @@ namespace Telemetri_tasarım_denemesi
         private static void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
 
         {
+
+
+            System.Diagnostics.Debug.WriteLine($"[UART] BytesToRead={SerialPort.BytesToRead}");
             while (SerialPort.BytesToRead > 0)
             {
-                byte gelen = (byte)SerialPort.ReadByte();
+                 byte gelen = (byte)SerialPort.ReadByte();
+                System.Diagnostics.Debug.WriteLine($"[UART] gelen=0x{gelen:X2}");
+
 
                 if (gelen == 0xFF)
                 {
@@ -85,25 +151,31 @@ namespace Telemetri_tasarım_denemesi
                     {
                         buffer[1] = gelen;//4
                         gelen = (byte)SerialPort.ReadByte();
-                        buffer[2] = gelen;// hız
+                        buffer[2] = gelen;// hız(rpm- açısal hız)
                         gelen = (byte)SerialPort.ReadByte();
                         buffer[3] = gelen;//voltaj
                         gelen = (byte)SerialPort.ReadByte();
-                        buffer[4] = gelen;//sıcaklık
+                        buffer[4] = gelen;//sıcaklık(opsiyonel)
                         gelen = (byte)SerialPort.ReadByte();
-                        buffer[5] = gelen;//enerji
+                        buffer[5] = gelen;//akım
                         gelen = (byte)SerialPort.ReadByte();
                         buffer[6] = gelen;//CRC
-                       // int CRC = (byte)(buffer[2] + buffer[3] + buffer[4] + buffer[5]) & 0xFF;
-                        //if (CRC == buffer[6])
-                        //{
+                        int CRC = (byte)(buffer[2] + buffer[3] + buffer[4] + buffer[5]) & 0xFF;
+                        if (CRC == buffer[6])
+                        {
+                            if (AppState.IlkVeriGeldi == false)
+                            {
+                                AracStopWatch.Start();
+                                IlkVeriGeldi = true;
+                            }
+
+                        
                             hiz = buffer[2];
                             voltaj = buffer[3];
                             sicaklik = buffer[4];
                             enerji = buffer[5];
-
-
-                        //}
+                        }
+                        // I*V = P -- açısal hız*T = P : Güç Tork 
                     }
                     else
                     {
