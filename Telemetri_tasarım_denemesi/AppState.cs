@@ -61,7 +61,7 @@ namespace Telemetri_tasarım_denemesi
                     KayıtDosya = dosyaYolu;
                     ExKayıtDosya = dosyaYolu;
                     BaslıkYazıldi = true;
-                    BekleyenSatırlar.Add ("Zaman_ms; Zaman_Clcok; hiz_kmh; V_bat_C; T_bat_C; kalan_enerji_Wh"); pipi
+                    BekleyenSatırlar.Add ("Zaman_ms; Zaman_Clcok; hiz_kmh; V_bat_C; T_bat_C; kalan_enerji_Wh"); 
                 }
 
                    YeniSatırlar = 
