@@ -50,6 +50,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -74,6 +82,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -145,7 +161,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_7BCC8D8263AD4178A1BD3A39C1989014"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]\\Yunusun dalı"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -181,9 +197,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Telemetri_Uygulama_1"
-        "ProductCode" = "8:{845D0998-8F88-4F81-9CE2-2B3FB59ECCDD}"
-        "PackageCode" = "8:{A87B2A0A-46BE-48A6-9953-5E2099A979DC}"
+        "ProductName" = "8:Telemetri_Uygulama_Yunus"
+        "ProductCode" = "8:{9CF28D14-E6CA-4D5B-8F83-88C03A3EF1B3}"
+        "PackageCode" = "8:{A1F11F6B-89DC-4378-9456-4A835287E761}"
         "UpgradeCode" = "8:{2361D889-A3BC-4163-9FB6-6C10C6617BB8}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -305,7 +321,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_35D338BA63C74D1283346AB2D6C181F6"
             {
-            "Name" = "8:Telemetri Solar"
+            "Name" = "8:Telemetri Solar Yunus"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
