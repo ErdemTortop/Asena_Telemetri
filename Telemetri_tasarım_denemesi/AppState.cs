@@ -14,7 +14,7 @@ namespace Telemetri_tasarım_denemesi
 {
     public static class AppState
     {
-        static byte[] buffer = new byte[14];
+        static byte[] buffer = new byte[15];
         public static SerialPort SerialPort { get; set; }
         public static float hiz_rpm { get; set; }
         public static float vol { get; set; }
