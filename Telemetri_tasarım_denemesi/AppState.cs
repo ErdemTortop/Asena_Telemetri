@@ -63,7 +63,7 @@ namespace Telemetri_tasarım_denemesi
                     KayıtDosya = dosyaYolu;
                     ExKayıtDosya = dosyaYolu;
                     BaslıkYazıldi = true;
-                    BekleyenSatırlar.Add ("Zaman_ms; Zaman_Saat; hiz_rpm; voltaj_V; Akım_A; guc_W; Tork_Nm; Verim_%"); 
+                    BekleyenSatırlar.Add ("Zaman_ms; Zaman_Clock; Speed_rpm; voltage_V; Current_A; power_W; Torque_Nm; Efficiency_%"); 
                 }
 
                 YeniSatırlar =
