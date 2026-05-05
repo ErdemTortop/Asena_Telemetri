@@ -123,10 +123,12 @@ namespace Telemetri_tasarım_denemesi
             {
                 AppState.KayitYap();
                     KayitTextBox.Text += $"{DateTime.Now:HH:mm:ss}" +
-                            $", Hız: {AppState.hiz} km/h" +
-                            $", Voltaj: {AppState.voltaj} V" +
-                            $", Sıcaklık: {AppState.sicaklik} °C" +
-                            $", Enerji: {AppState.enerji} Wh\n" + 
+                            $", Hız: {AppState.hiz_rpm} r/min" +
+                            $", Voltaj: {AppState.vol} V" +
+                            $", Sıcaklık: {AppState.curr} A" +
+                            $", Sıcaklık: {AppState.pow} W" +
+                            $", Sıcaklık: {AppState.torr} Nm" +
+                            $", Enerji: {AppState.eff} %\n" + 
                             $"{AppState.ExKayıtDosya}\n";
             }
         }
