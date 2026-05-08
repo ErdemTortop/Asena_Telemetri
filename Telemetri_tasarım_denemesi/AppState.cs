@@ -232,7 +232,7 @@ namespace Telemetri_tasarım_denemesi
                         buffer[0] = 0;
                     }
                 }
-                    SerialPort.DataReceived += SerialPort_DataReceived;
+
                 }
 
 
