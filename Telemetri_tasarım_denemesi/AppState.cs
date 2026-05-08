@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Ports;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Threading;
+﻿    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.IO.Ports;
+    using System.Linq;
+    using System.Security.AccessControl;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Media;
+    using System.Windows.Threading;
 
 namespace Telemetri_tasarım_denemesi
 {
@@ -25,36 +25,52 @@ namespace Telemetri_tasarım_denemesi
         public static string SecilenPort { get; set; }
         public static string SecilenRate { get; set; }
 
-        public static bool RecordFlag;
+            public static bool RecordFlag;
 
-        public static string dosyaYolu;
+            public static object RecordLock = new object();
 
-        public static string KayıtDosya;
+            public static string dosyaYolu;
 
-        public static string ExKayıtDosya;
+            public static string KayıtDosya;
 
-        public static bool BaslıkYazıldi = false;
+            public static string ExKayıtDosya;
 
-        public static int KayıtSayaci = 0;
+            public static long KayıtMs;
 
-        public static string TopluYazi;
+            public static long ExKayıtMs;
 
-        public static string YeniSatırlar;
+            public static long KopmaBaslangıcı;
 
-        public static System.Diagnostics.Stopwatch AracStopWatch = new System.Diagnostics.Stopwatch();
+            public static long KopmaBitis;
 
-        public static bool IlkVeriGeldi = false;
+            public static bool BaslıkYazıldi = false;
 
-        public static List<string> BekleyenSatırlar = new List<string>();
+            public static bool KopmaVar = false;
 
-        public static string KayitYap()
-        {
-            try 
+            public static int KayıtSayaci = 0;
+
+            public static string TopluYazi;
+
+            public static string YeniSatırlar;
+
+            public static System.Diagnostics.Stopwatch AracStopWatch = new System.Diagnostics.Stopwatch();
+
+            public static bool IlkVeriGeldi = false;
+
+            public static List<string> BekleyenSatırlar = new List<string>();
+
+            public static string KayitYap()
             {
-                if (RecordFlag == false)
+                try 
                 {
-                    return "";
-                }
+
+                    lock(RecordLock)
+                    {
+
+                        if (RecordFlag == false)
+                        {
+                            return "";
+                        }
 
                 
 
@@ -66,7 +82,14 @@ namespace Telemetri_tasarım_denemesi
                     BekleyenSatırlar.Add ("Zaman_ms; Zaman_Clock; Speed_rpm; voltage_V; Current_A; power_W; Torque_Nm; Efficiency_%"); 
                 }
 
-                YeniSatırlar =
+                    if (KopmaVar == true)
+                    {
+                        KopmaBitis = AracStopWatch.ElapsedMilliseconds;
+                        AppState.BekleyenSatırlar.Add($"Kopma Yaşandı; Başlangıç:{AppState.KopmaBaslangıcı} ; Bitiş: {AppState.KopmaBitis}; Kopma Süresi : {AppState.KopmaBitis - AppState.KopmaBaslangıcı}");
+                        BekleyenSatırlar.Add("Bağlantı Yeniden Sağlandı");
+                    }
+                    KayıtMs = AracStopWatch.ElapsedMilliseconds;
+                    YeniSatırlar =
                      $"{AracStopWatch.ElapsedMilliseconds} ms;" +
                      $"{DateTime.Now:HH:mm:ss};" +
                      $"{AppState.hiz_rpm} ;" +
@@ -78,73 +101,77 @@ namespace Telemetri_tasarım_denemesi
                 BekleyenSatırlar.Add(YeniSatırlar);
                 KayıtSayaci ++;
 
-                if (KayıtSayaci >= 15)
-                {
-                    TopluYazi = string.Join("\n", BekleyenSatırlar) + "\n";
-                    File.AppendAllText(KayıtDosya, TopluYazi, System.Text.Encoding.UTF8);
-                    BekleyenSatırlar.Clear();
-                    KayıtSayaci = 0;
-                }
-                return YeniSatırlar; 
-            }
-            catch (Exception ex)
-            {
-                 MessageBox.Show(ex.Message, "Hata");
-                return"";
-            }
-           /* try {
-
-                string satir = "";
-                if (RecordFlag == true)
-                {
-                    if (!File.Exists(KayıtDosya))
-                    {
-
-                        KayıtDosya = dosyaYolu;
-
-                        ExKayıtDosya = KayıtDosya;
-                        
-                        satir = "Zaman_ms; hiz_kmh; V_bat_C; T_bat_C; kalan_enerji_Wh\n";
-
-                        File.AppendAllText(KayıtDosya, satir, System.Text.Encoding.UTF8);
-
-                        satir = $"{DateTime.Now:HH:mm:ss}; {AppState.hiz} km/h; {AppState.voltaj} V; {AppState.sicaklik} °C; {AppState.enerji} wh\n";
-                        
-                        File.AppendAllText(KayıtDosya, satir, System.Text.Encoding.UTF8);
+                        if (KayıtSayaci >= 15)
+                        {
+                            TopluYazi = string.Join("\n", BekleyenSatırlar) + "\n";
+                            File.AppendAllText(KayıtDosya, TopluYazi, System.Text.Encoding.UTF8);
+                            BekleyenSatırlar.Clear();
+                            KayıtSayaci = 0;
+                        }
+                        KopmaVar = false;
+                        return YeniSatırlar;
+                    
                     }
-                    else
-                    {
-                        satir = $"{DateTime.Now:HH:mm:ss}; {AppState.hiz} km/h; {AppState.voltaj} V; {AppState.sicaklik} °C; {AppState.enerji} wh\n";
-                        File.AppendAllText(KayıtDosya, satir, System.Text.Encoding.UTF8);
-                    }
+                
                 }
+                catch (Exception ex)
+                {
+                     MessageBox.Show(ex.Message, "Hata");
+                    return"";
+                }
+               /* try {
 
-                return satir;
+                    string satir = "";
+                    if (RecordFlag == true)
+                    {
+                        if (!File.Exists(KayıtDosya))
+                        {
+
+                            KayıtDosya = dosyaYolu;
+
+                            ExKayıtDosya = KayıtDosya;
+                        
+                            satir = "Zaman_ms; hiz_kmh; V_bat_C; T_bat_C; kalan_enerji_Wh\n";
+
+                            File.AppendAllText(KayıtDosya, satir, System.Text.Encoding.UTF8);
+
+                            satir = $"{DateTime.Now:HH:mm:ss}; {AppState.hiz} km/h; {AppState.voltaj} V; {AppState.sicaklik} °C; {AppState.enerji} wh\n";
+                        
+                            File.AppendAllText(KayıtDosya, satir, System.Text.Encoding.UTF8);
+                        }
+                        else
+                        {
+                            satir = $"{DateTime.Now:HH:mm:ss}; {AppState.hiz} km/h; {AppState.voltaj} V; {AppState.sicaklik} °C; {AppState.enerji} wh\n";
+                            File.AppendAllText(KayıtDosya, satir, System.Text.Encoding.UTF8);
+                        }
+                    }
+
+                    return satir;
 
 
-            }
-            catch (Exception ex)
-            {
+                }
+                catch (Exception ex)
+                {
 
-                MessageBox.Show(ex.Message, "Hata");
+                    MessageBox.Show(ex.Message, "Hata");
 
              
+                }
+                return ""; */
             }
-            return ""; */
-        }
 
 
 
-        private static void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+            private static void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
 
-        {
-
-
-            System.Diagnostics.Debug.WriteLine($"[UART] BytesToRead={SerialPort.BytesToRead}");
-            while (SerialPort.BytesToRead > 0)
             {
-                 byte gelen = (byte)SerialPort.ReadByte();
-                System.Diagnostics.Debug.WriteLine($"[UART] gelen=0x{gelen:X2}");
+
+
+                System.Diagnostics.Debug.WriteLine($"[UART] BytesToRead={SerialPort.BytesToRead}");
+                while (SerialPort.BytesToRead > 0)
+                {
+                     byte gelen = (byte)SerialPort.ReadByte();
+                    System.Diagnostics.Debug.WriteLine($"[UART] gelen=0x{gelen:X2}");
 
 
                 if (gelen == 0xFF) //float voltage = ((buffer[2] << 8) | buffer[3]) / 100.0f;
@@ -191,7 +218,7 @@ namespace Telemetri_tasarım_denemesi
                                 IlkVeriGeldi = true;
                             }
 
-                            vol = ((buffer[2] << 8) | buffer[3] ) / 100.0f;
+                            vol = ((buffer[2] << 8) | buffer[3]) / 100.0f;
                             curr = ((buffer[4] << 8) | buffer[5]) / 100.0f;
                             hiz_rpm = ((buffer[6] << 8) | buffer[7]) / 10.0f;
                             pow = ((buffer[8] << 8) | buffer[9]) / 10.0f;
@@ -205,34 +232,26 @@ namespace Telemetri_tasarım_denemesi
                         buffer[0] = 0;
                     }
                 }
+                    SerialPort.DataReceived += SerialPort_DataReceived;
+                }
+
+
 
             }
-        }
 
-        public static void StartListening()
-        {
-            if (SerialPort != null)
+            public static void StopListening()
             {
-                SerialPort.DataReceived += SerialPort_DataReceived;
-            }
-
-
-
-        }
-
-        public static void StopListening()
-        {
-            if (SerialPort != null)
-            {
-                SerialPort.DataReceived -= SerialPort_DataReceived;
+                if (SerialPort != null)
+                {
+                    SerialPort.DataReceived -= SerialPort_DataReceived;
+                }
             }
         }
+
+
+
+
+
+
     }
-
-
-
-
-
-
-}
 

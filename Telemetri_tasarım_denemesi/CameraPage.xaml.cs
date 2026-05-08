@@ -74,21 +74,25 @@ namespace Telemetri_tasarım_denemesi
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
-            if (AppState.RecordFlag == true)
+            lock (AppState.RecordLock)
             {
-                if (AppState.BekleyenSatırlar.Count > 0)
+                if (AppState.RecordFlag == true)
                 {
-                    string TopluYaziFinal = string.Join("\n", AppState.BekleyenSatırlar) + "\n";
-                    File.AppendAllText(AppState.KayıtDosya, TopluYaziFinal, System.Text.Encoding.UTF8);
-                    AppState.BekleyenSatırlar.Clear();
-                    AppState.KayıtSayaci = 0;
+                    if (AppState.BekleyenSatırlar.Count > 0)
+                    {
+                        string TopluYaziFinal = string.Join("\n", AppState.BekleyenSatırlar) + "\n";
+                        File.AppendAllText(AppState.KayıtDosya, TopluYaziFinal, System.Text.Encoding.UTF8);
+                        AppState.BekleyenSatırlar.Clear();
+                        AppState.KayıtSayaci = 0;
+                    }
+
+                    AppState.RecordFlag = false;
+                    AppState.BaslıkYazıldi = false;
+                    AppState.dosyaYolu = "";
+                    AppState.KayıtDosya = "";
+                    KayıtDurumuRenk.Background = (Brush)new BrushConverter().ConvertFrom("#E05C5C");
                 }
 
-                AppState.RecordFlag = false;
-                AppState.BaslıkYazıldi = false;
-                AppState.dosyaYolu = "";
-                AppState.KayıtDosya = "";
-                KayıtDurumuRenk.Background = (Brush)new BrushConverter().ConvertFrom("#E05C5C");
             }
         }
 
@@ -121,6 +125,26 @@ namespace Telemetri_tasarım_denemesi
         {
             if (AppState.RecordFlag == true)
             {
+                if (AppState.IlkVeriGeldi == true && AppState.KopmaVar == false)
+                {
+                    if (AppState.AracStopWatch.ElapsedMilliseconds - AppState.KayıtMs > 2000)
+                    {
+                        AppState.KopmaVar = true;
+                        AppState.KopmaBaslangıcı = AppState.AracStopWatch.ElapsedMilliseconds;
+
+                    }
+
+                }
+
+                AppState.KayitYap();
+                KayitTextBox.Text += $"{DateTime.Now:HH:mm:ss}" +
+                        $", Hız: {AppState.hiz_rpm} r/min" +
+                        $", Voltaj: {AppState.vol} V" +
+                        $", Sıcaklık: {AppState.curr} A" +
+                        $", Sıcaklık: {AppState.pow} W" +
+                        $", Sıcaklık: {AppState.torr} Nm" +
+                        $", Enerji: {AppState.eff} %\n" +
+                        $"{AppState.ExKayıtDosya}\n";
                 AppState.KayitYap();
                     KayitTextBox.Text += $"{DateTime.Now:HH:mm:ss}" +
                             $", Hız: {AppState.hiz_rpm} r/min" +
@@ -130,6 +154,9 @@ namespace Telemetri_tasarım_denemesi
                             $", Sıcaklık: {AppState.torr} Nm" +
                             $", Enerji: {AppState.eff} %\n" + 
                             $"{AppState.ExKayıtDosya}\n";
+                
+                AppState.ExKayıtMs = AppState.KayıtMs;
+
             }
         }
 
