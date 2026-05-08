@@ -136,15 +136,7 @@ namespace Telemetri_tasarım_denemesi
 
                 }
 
-                AppState.KayitYap();
-                KayitTextBox.Text += $"{DateTime.Now:HH:mm:ss}" +
-                        $", Hız: {AppState.hiz_rpm} r/min" +
-                        $", Voltaj: {AppState.vol} V" +
-                        $", Sıcaklık: {AppState.curr} A" +
-                        $", Sıcaklık: {AppState.pow} W" +
-                        $", Sıcaklık: {AppState.torr} Nm" +
-                        $", Enerji: {AppState.eff} %\n" +
-                        $"{AppState.ExKayıtDosya}\n";
+                
                 AppState.ExKayıtMs = AppState.KayıtMs;
 
             }

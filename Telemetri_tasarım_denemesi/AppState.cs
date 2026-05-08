@@ -224,6 +224,7 @@ namespace Telemetri_tasarım_denemesi
                             pow = ((buffer[8] << 8) | buffer[9]) / 10.0f;
                             torr = ((buffer[10] << 8) | buffer[11]) / 100.0f;
                             eff = ((buffer[12] << 8) | buffer[13]) / 100.0f;
+                            AppState.KayitYap();
 
                         }
                     }
@@ -239,7 +240,19 @@ namespace Telemetri_tasarım_denemesi
 
             }
 
-            public static void StopListening()
+
+        public static void StartListening()
+        {
+            if (SerialPort != null)
+            {
+                SerialPort.DataReceived += SerialPort_DataReceived;
+            }
+
+
+
+        }
+
+        public static void StopListening()
             {
                 if (SerialPort != null)
                 {
