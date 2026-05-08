@@ -38,10 +38,12 @@ namespace Telemetri_tasarım_denemesi
 
             Dispatcher.Invoke(() =>
             {
-                HizLbl.Content = $"{AppState.hiz} km/h";
-                VoltajLbl.Content = $"{AppState.voltaj} V";
-                DereceLbl.Content = $"{AppState.sicaklik} °C";
-                whLbl.Content = $"{AppState.enerji} wh";
+                rpmLbl.Content = $"{AppState.rpm} r/min";
+                VolLbl.Content = $"{AppState.voltage} V";
+                CurrLbl.Content = $"{AppState.current} A";
+                powLbl.Content = $"{AppState.power_elec} W";
+                torrLbl.Content = $"{AppState.torque} Nm";
+                effLbl.Content = $"{AppState.efficiency} %";
             });
 
             timer = new DispatcherTimer();
@@ -62,10 +64,12 @@ namespace Telemetri_tasarım_denemesi
         private void Timer_Tick(object sender, EventArgs e)
         {
 
-            HizLbl.Content = $"{AppState.hiz} km/h";
-            VoltajLbl.Content = $"{AppState.voltaj} V";
-            DereceLbl.Content = $"{AppState.sicaklik} °C";
-            whLbl.Content = $"{AppState.enerji} wh";
+            rpmLbl.Content = $"{AppState.rpm} r/min";
+            VolLbl.Content = $"{AppState.voltage} V";
+            CurrLbl.Content = $"{AppState.current} A";
+            powLbl.Content = $"{AppState.power_elec} W";
+            torrLbl.Content = $"{AppState.torque} Nm";
+            effLbl.Content = $"{AppState.efficiency} %";
 
         }
 
