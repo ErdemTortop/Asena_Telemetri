@@ -73,22 +73,26 @@ namespace Telemetri_tasarım_denemesi
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
-        {
-            if (AppState.RecordFlag == true)
+        {   
+            lock(AppState.RecordLock)
             {
-                if (AppState.BekleyenSatırlar.Count > 0)
-                {
-                    string TopluYaziFinal = string.Join("\n", AppState.BekleyenSatırlar) + "\n";
-                    File.AppendAllText(AppState.KayıtDosya, TopluYaziFinal, System.Text.Encoding.UTF8);
-                    AppState.BekleyenSatırlar.Clear();
-                    AppState.KayıtSayaci = 0;
-                }
+               if (AppState.RecordFlag == true)
+               {
+                  if (AppState.BekleyenSatırlar.Count > 0)
+                  {
+                      string TopluYaziFinal = string.Join("\n", AppState.BekleyenSatırlar) + "\n";
+                      File.AppendAllText(AppState.KayıtDosya, TopluYaziFinal, System.Text.Encoding.UTF8);
+                      AppState.BekleyenSatırlar.Clear();
+                      AppState.KayıtSayaci = 0;
+                  }       
 
-                AppState.RecordFlag = false;
-                AppState.BaslıkYazıldi = false;
-                AppState.dosyaYolu = "";
-                AppState.KayıtDosya = "";
-                KayıtDurumuRenk.Background = (Brush)new BrushConverter().ConvertFrom("#E05C5C");
+                  AppState.RecordFlag = false;
+                  AppState.BaslıkYazıldi = false;
+                  AppState.dosyaYolu = "";
+                  AppState.KayıtDosya = "";
+                  KayıtDurumuRenk.Background = (Brush)new BrushConverter().ConvertFrom("#E05C5C");
+               }
+            
             }
         }
 
@@ -121,13 +125,29 @@ namespace Telemetri_tasarım_denemesi
         {
             if (AppState.RecordFlag == true)
             {
-                AppState.KayitYap();
-                    KayitTextBox.Text += $"{DateTime.Now:HH:mm:ss}" +
+
+                if (AppState.IlkVeriGeldi == true && AppState.KopmaVar == false) 
+                {
+                        if (AppState.AracStopWatch.ElapsedMilliseconds - AppState.KayıtMs > 2000)
+                        {
+                            AppState.KopmaVar = true;
+                            AppState.KopmaBaslangıcı = AppState.AracStopWatch.ElapsedMilliseconds;
+
+                        }
+
+                }
+
+                
+
+                KayitTextBox.Text += $"{DateTime.Now:HH:mm:ss}" +
                             $", Hız: {AppState.hiz} km/h" +
                             $", Voltaj: {AppState.voltaj} V" +
                             $", Sıcaklık: {AppState.sicaklik} °C" +
                             $", Enerji: {AppState.enerji} Wh\n" + 
                             $"{AppState.ExKayıtDosya}\n";
+                
+                AppState.ExKayıtMs = AppState.KayıtMs;
+
             }
         }
 
