@@ -39,6 +39,12 @@ namespace Telemetri_tasarım_denemesi
         private void CameraPage_Loaded(object sender, RoutedEventArgs e)
         {
 
+
+            if (AppState.RecordFlag == true)  // ← ekle
+            {
+                KayıtDurumuRenk.Background = (Brush)new BrushConverter().ConvertFrom("#4CAF7D");
+            }
+
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += Timer_Tick;

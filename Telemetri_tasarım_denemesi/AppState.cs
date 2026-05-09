@@ -68,6 +68,8 @@
 
             public static bool KopmaVar = false;
 
+            public static bool TestFlag = false;
+
             public static int KayıtSayaci = 0;
 
             public static string TopluYazi;
