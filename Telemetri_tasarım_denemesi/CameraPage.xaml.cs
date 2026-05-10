@@ -153,6 +153,12 @@ namespace Telemetri_tasarım_denemesi
                             $", Tork: {AppState.torque}Nm " +
                             $", Verim: {AppState.efficiency}%\n" + 
                             $"{AppState.ExKayıtDosya}\n";
+                AppState.TextBoxSayacı++;
+                if(AppState.TextBoxSayacı > 20)
+                {
+                    KayitTextBox.Clear();
+                    AppState.TextBoxSayacı = 0;
+                }
                 
                 AppState.ExKayıtMs = AppState.KayıtMs;
 

@@ -31,8 +31,8 @@ namespace Telemetri_tasarım_denemesi
             AppState.TestFlag = true; 
             AppState.AracStopWatch.Restart();
 
-            AppState.rpm = 2000;
-            AppState.voltage = 80;
+            AppState.rpm = 10;
+            AppState.voltage = 5;
             AppState.current = 1;
 
             while (AppState.TestFlag ==true) 
@@ -40,13 +40,13 @@ namespace Telemetri_tasarım_denemesi
                 
 
                 AppState.rpm += 10;
-                if (AppState.rpm > 5000) AppState.rpm = 2000;
+                if (AppState.rpm > 800) AppState.rpm = 10;
 
                 AppState.voltage++;
-                if (AppState.voltage > 150) AppState.voltage = 20;
+                if (AppState.voltage > 90) AppState.voltage = 5;
 
                 AppState.current++;
-                if (AppState.current > 30) AppState.current = 30;
+                if (AppState.current > 30) AppState.current = 1;
 
                 
 
@@ -71,7 +71,7 @@ namespace Telemetri_tasarım_denemesi
                 {
                     AppState.efficiency = 0.0f;
                 }
-                AppState.kmh = AppState.rpm * (2f * 3.14159f * AppState.tekerlek_cap) * 60f / 1000f;
+                AppState.kmh = AppState.rpm * (3.14159f * AppState.tekerlek_cap) * 60f / 1000f;
 
                 if (AppState.IlkVeriGeldi == false)  // ← bunu ekle
                 {

@@ -16,21 +16,22 @@
         {
             static byte[] buffer = new byte[9];
             public static SerialPort SerialPort { get; set; }
-            public static int rpm { get; set; }
-            public static int vol { get; set; }
-            public static int curr { get; set; }
-            public static string SecilenPort { get; set; }
-            public static string SecilenRate { get; set; }
 
-            public static bool RecordFlag;
 
             public static object RecordLock = new object();
 
+           
             public static string dosyaYolu;
 
             public static string KayıtDosya;
 
             public static string ExKayıtDosya;
+
+            public static string TopluYazi;
+
+            public static string YeniSatırlar;
+            public static string SecilenPort { get; set; }
+            public static string SecilenRate { get; set; }
 
 
             public static float omega = 0.0f;
@@ -64,21 +65,30 @@
 
             public static long KopmaBitis;
 
+
             public static bool BaslıkYazıldi = false;
 
             public static bool KopmaVar = false;
 
             public static bool TestFlag = false;
 
-            public static int KayıtSayaci = 0;
-
-            public static string TopluYazi;
-
-            public static string YeniSatırlar;
-
-            public static System.Diagnostics.Stopwatch AracStopWatch = new System.Diagnostics.Stopwatch();
+            public static bool RecordFlag;
 
             public static bool IlkVeriGeldi = false;
+
+
+            public static int KayıtSayaci = 0;
+            public static int rpm { get; set; }
+            public static int vol { get; set; }
+            public static int curr { get; set; }
+
+            public static int TextBoxSayacı = 0;
+
+
+
+        public static System.Diagnostics.Stopwatch AracStopWatch = new System.Diagnostics.Stopwatch();
+
+            
 
             public static List<string> BekleyenSatırlar = new List<string>();
 
@@ -145,128 +155,11 @@
                      MessageBox.Show(ex.Message, "Hata");
                     return"";
                 }
-               /* try {
-
-                    string satir = "";
-                    if (RecordFlag == true)
-                    {
-                        if (!File.Exists(KayıtDosya))
-                        {
-
-                            KayıtDosya = dosyaYolu;
-
-                            ExKayıtDosya = KayıtDosya;
-                        
-                            satir = "Zaman_ms; hiz_kmh; V_bat_C; T_bat_C; kalan_enerji_Wh\n";
-
-                            File.AppendAllText(KayıtDosya, satir, System.Text.Encoding.UTF8);
-
-                            satir = $"{DateTime.Now:HH:mm:ss}; {AppState.hiz} km/h; {AppState.voltaj} V; {AppState.sicaklik} °C; {AppState.enerji} wh\n";
-                        
-                            File.AppendAllText(KayıtDosya, satir, System.Text.Encoding.UTF8);
-                        }
-                        else
-                        {
-                            satir = $"{DateTime.Now:HH:mm:ss}; {AppState.hiz} km/h; {AppState.voltaj} V; {AppState.sicaklik} °C; {AppState.enerji} wh\n";
-                            File.AppendAllText(KayıtDosya, satir, System.Text.Encoding.UTF8);
-                        }
-                    }
-
-                    return satir;
-
-
-                }
-                catch (Exception ex)
-                {
-
-                    MessageBox.Show(ex.Message, "Hata");
-
              
-                }
-                return ""; */
             }
 
         
-       /* static int bufferIndex = 0;
-        static bool syncFound = false;
-
-        private static void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            int bytesToRead = SerialPort.BytesToRead;
-            byte[] incoming = new byte[bytesToRead];
-            SerialPort.Read(incoming, 0, bytesToRead);
-
-            foreach (byte b in incoming)
-            {
-                System.Diagnostics.Debug.WriteLine($"[RAW] 0x{b:X2}  syncFound={syncFound}  bufferIndex={bufferIndex}");
-
-                if (!syncFound)
-                {
-                    if (b == 0xFF)
-                    {
-                        bufferIndex = 0;
-                        buffer[bufferIndex++] = b;
-                        syncFound = true;
-                    }
-                    continue;
-                }
-
-                if (bufferIndex == 1)
-                {
-                    if (b != 6)
-                    {
-                        syncFound = false;
-                        bufferIndex = 0;
-                        if (b == 0xFF)
-                        {
-                            buffer[bufferIndex++] = b;
-                            syncFound = true;
-                        }
-                        continue;
-                    }
-                }
-
-                buffer[bufferIndex++] = b;
-
-                if (bufferIndex == 9)
-                {
-                    syncFound = false;
-                    bufferIndex = 0;
-
-                    byte crc = 0;
-                    for (int i = 2; i <= 7; i++) crc += buffer[i];
-
-                    System.Diagnostics.Debug.WriteLine($"[CRC] hesaplanan={crc} gelen={buffer[8]}");
-
-                    if (crc != buffer[8]) continue;
-
-                    if (!IlkVeriGeldi)
-                    {
-                        AracStopWatch.Start();
-                        IlkVeriGeldi = true;
-                    }
-
-                    vol = (buffer[2] << 8) | buffer[3];
-                    curr = (buffer[4] << 8) | buffer[5];
-                    rpm = (buffer[6] << 8) | buffer[7];
-                    rpm_float = rpm / 10.0f;
-
-                    voltage = (vol / 4095.0f) * 3.3f * (482.0f / 12.0f);
-                    current = ((curr / 4095.0f) * 3.3f * (16.8f / 6.8f) - 2.5f) / 0.0133f;
-                    omega = rpm_float * 2.0f * 3.14159f / 60.0f;
-                    power_elec = voltage * current;
-                    kayıplar = current * current * 0.2f;
-                    power_mech = power_elec - kayıplar;
-                    torque = omega > 0.05f ? power_mech / omega : 0.0f;
-                    efficiency = power_elec > 0.1f ? (power_mech / power_elec) * 100.0f : 0.0f;
-                    kmh = rpm_float * (2f * 3.14159f * tekerlek_cap) * 60f / 1000f;
-
-                    System.Diagnostics.Debug.WriteLine($"[PARSE OK] rpm={rpm_float} V={voltage:F1} A={current:F1}");
-
-                    AppState.KayitYap();
-                }
-            }
-        }*/
+       
 
          private static void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
 
@@ -313,10 +206,10 @@
                              }
 
 
-                             vol = ((buffer[2] << 8) | buffer[3]);
-                             curr = ((buffer[4] << 8) | buffer[5]);
-                             rpm = ((buffer[6] << 8) | buffer[7]);
-                             rpm_float = rpm / 10;
+                             vol = ((buffer[2] << 6) | buffer[3]);
+                             curr = ((buffer[4] << 6) | buffer[5]);
+                             rpm = ((buffer[6] << 7) | buffer[7]);
+                             rpm_float = rpm / 10.0f;
 
                          voltage = (vol / 4095.0f) * 3.3f * (482.0f / 12.0f);
                          current = ((curr / 4095.0f) * 3.3f * (16.8f / 6.8f) - 2.5f) / 0.0133f;
@@ -342,7 +235,7 @@
                          {
                              efficiency = 0.0f;
                          }
-                         kmh = rpm_float * (2f * 3.14159f * tekerlek_cap) * 60f / 1000f;
+                         kmh = rpm_float * (3.14159f * tekerlek_cap) * 60f / 1000f;
 
                          AppState.KayitYap();
                          }
