@@ -38,7 +38,7 @@ namespace Telemetri_tasarım_denemesi
 
             Dispatcher.Invoke(() =>
             {
-                rpmLbl.Content = $"{AppState.rpm} r/min";
+                rpmLbl.Content = $"{AppState.rpm_float} r/min\n {AppState.kmh} km/h";
                 VolLbl.Content = $"{AppState.voltage} V";
                 CurrLbl.Content = $"{AppState.current} A";
                 powLbl.Content = $"{AppState.power_elec} W";
@@ -64,7 +64,7 @@ namespace Telemetri_tasarım_denemesi
         private void Timer_Tick(object sender, EventArgs e)
         {
 
-            rpmLbl.Content = $"{AppState.rpm} r/min";
+            rpmLbl.Content = $"{AppState.rpm_float} r/min \n {AppState.kmh} km/h";
             VolLbl.Content = $"{AppState.voltage} V";
             CurrLbl.Content = $"{AppState.current} A";
             powLbl.Content = $"{AppState.power_elec} W";

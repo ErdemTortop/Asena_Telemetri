@@ -11,7 +11,8 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="60.135"/>
+            <RowDefinition Height="39.865"/>
             <RowDefinition Height="550"/>
             <RowDefinition Height="50"/>
             <RowDefinition Height="10"/>
@@ -22,11 +23,16 @@
             <ColumnDefinition Width="150"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Border CornerRadius="20" BorderThickness="0" Height="70" Width="385" HorizontalAlignment="Left" Margin="10,15,0,15"/>
-        <TextBlock Foreground="#E2E8F0" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="   Asena Telemetri Ana Ekran " VerticalAlignment="Center" FontSize="30"/>
+        <Border CornerRadius="20" BorderThickness="0" Height="70" Width="385" HorizontalAlignment="Left" Margin="10,15,0,15" Grid.RowSpan="2"/>
+        <TextBlock Foreground="#E2E8F0" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="   Asena Telemetri Ana Ekran " VerticalAlignment="Center" FontSize="30" Grid.RowSpan="2"/>
 
 
-        <Border Grid.Row="2" Grid.Column="1" Background="#262835" BorderBrush="#3D3D4E" BorderThickness="1" CornerRadius="20">
+        <Border Grid.Column="0" Grid.Row="2" Width="450" Height="450" Margin="525,50,75,50" BorderThickness="1"  BorderBrush="#3D3D4E" CornerRadius="20" >
+            <Image Source="/images/Photos/qr-code.png" Margin="5,5,5,5"/>
+        </Border>
+
+
+        <Border Grid.Row="3" Grid.Column="1" Background="#262835" BorderBrush="#3D3D4E" BorderThickness="1" CornerRadius="20" >
 
             <Border Background="#262835" CornerRadius="20"  BorderThickness="0" Grid.Row="1" >
                 <Button Style="{StaticResource OrangeHoverButton}" x:Name="TestStartButon" Click="Test_Start" >
@@ -36,13 +42,13 @@
 
         </Border>
 
-        <Border Grid.Row="4" Grid.Column="1" Background="#262835" BorderBrush="#3D3D4E" BorderThickness="1" CornerRadius="20">
+        <Border Grid.Row="5" Grid.Column="1" Background="#262835" BorderBrush="#3D3D4E" BorderThickness="1" CornerRadius="20">
 
-                <Border Background="#262835" CornerRadius="20"  BorderThickness="0" Grid.Row="1" >
-                    <Button Style="{StaticResource OrangeHoverButton}" x:Name="TestStopButton" Click="Test_stop" >
-                        <TextBlock  TextWrapping="Wrap" Foreground="#E2E8F0" Text="Testi Durdur" FontSize="20" FontWeight="Light"/>
-                    </Button>
-                </Border>
+            <Border Background="#262835" CornerRadius="20"  BorderThickness="0" Grid.Row="1" >
+                <Button Style="{StaticResource OrangeHoverButton}" x:Name="TestStopButton" Click="Test_stop" >
+                    <TextBlock  TextWrapping="Wrap" Foreground="#E2E8F0" Text="Testi Durdur" FontSize="20" FontWeight="Light"/>
+                </Button>
+            </Border>
 
         </Border>
 

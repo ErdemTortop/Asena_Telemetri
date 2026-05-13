@@ -56,6 +56,10 @@
 
             public static float rpm_float = 0.0f;
 
+            public static float v_float = 0.0f;
+
+            public static float i_float = 0.0f;
+
 
             public static long KayıtMs;
 
@@ -79,8 +83,8 @@
 
             public static int KayıtSayaci = 0;
             public static int rpm { get; set; }
-            public static int vol { get; set; }
-            public static int curr { get; set; }
+            public static short vol { get; set; }
+            public static short curr { get; set; }
 
             public static int TextBoxSayacı = 0;
 
@@ -111,7 +115,7 @@
                             KayıtDosya = dosyaYolu;
                             ExKayıtDosya = dosyaYolu;
                             BaslıkYazıldi = true;
-                            BekleyenSatırlar.Add("Zaman_ms; Zaman_Clcok; Hiz_rpm; Voltaj_V; Akım_A; Guc_W; Tork_Nm; Verim_%");
+                            BekleyenSatırlar.Add("Zaman_ms; Zaman_Clcok; Hiz_rpm; Hiz_kmh; Voltaj_V; Akım_A; Guc_W; Tork_Nm; Verim_%");
                         }
 
                         if (KopmaVar == true)
@@ -128,7 +132,8 @@
                     YeniSatırlar =
                          $"{KayıtMs} ms;" +
                          $"{DateTime.Now:HH:mm:ss};" +
-                         $"{AppState.rpm};" +
+                         $"{AppState.rpm_float};" +
+                         $"{AppState.kmh};" +
                          $"{AppState.voltage};" +
                          $"{AppState.current};" +
                          $"{AppState.power_elec};" +
@@ -206,21 +211,20 @@
                              }
 
 
-                             vol = ((buffer[2] << 6) | buffer[3]);
-                             curr = ((buffer[4] << 6) | buffer[5]);
-                             rpm = ((buffer[6] << 7) | buffer[7]);
+                             vol = (short)((buffer[2] << 8) | buffer[3]);
+                             curr = (short)((buffer[4] << 8) | buffer[5]);
+                             rpm = ((buffer[6] << 8) | buffer[7]);
                              rpm_float = rpm / 10.0f;
-
-                         voltage = (vol / 4095.0f) * 3.3f * (482.0f / 12.0f);
-                         current = ((curr / 4095.0f) * 3.3f * (16.8f / 6.8f) - 2.5f) / 0.0133f;
-
+                             voltage = vol / 10.0f;
+                             current = curr / 10.0f;
+                             
 
                          omega = rpm_float * 2.0f * 3.14159f / 60.0f;
                          power_elec = voltage * current;
                          kayıplar = current * current * 0.2f;
                          power_mech = power_elec - kayıplar;
                          if (omega > 0.05f)
-                         { // Eğer motor dönüyorsa tork hesapla
+                         { 
                              torque = power_mech / omega;
                          }
                          else
@@ -228,14 +232,14 @@
                              torque = 0.0f;
                          }
                          if (power_elec > 0.1f)
-                         { // Eğer elektrik gücü varsa verim hesapla
+                         { 
                              efficiency = (power_mech / power_elec) * 100.0f;
                          }
                          else
                          {
                              efficiency = 0.0f;
                          }
-                         kmh = rpm_float * (3.14159f * tekerlek_cap) * 60f / 1000f;
+                            kmh = (rpm_float / 60.0f) * tekerlek_cap * 3.14159f * 3.6f;
 
                          AppState.KayitYap();
                          }
