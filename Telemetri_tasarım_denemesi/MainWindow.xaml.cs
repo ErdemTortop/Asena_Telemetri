@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.NetworkInformation;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -8,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Telemetri.Properties;
 
 namespace Telemetri_tasarım_denemesi
 {
@@ -19,15 +21,34 @@ namespace Telemetri_tasarım_denemesi
         public MainWindow()
         {
             InitializeComponent();
-            MainFrame.Navigate(new HomePage());
-            SolarBorder.Background = Brushes.Transparent;
-            UsbBorder.Background = Brushes.Transparent;
-            dataBorder.Background = Brushes.Transparent;
-            RecordBorder.Background = Brushes.Transparent;
-            HomeBorder.Background = new SolidColorBrush(Color.FromRgb(20, 25, 31));
+            bool mainpage_is_usbPage = Telemetri.Properties.Settings.Default.Usb_hub_is_mainpage;
+            if (mainpage_is_usbPage)
+            {
+                Usb_Click(null, null);
+            }
+            else
+            {
+                Home_Click(null, null);
+            }
 
         }
-      
+
+        public async Task<bool> IsInternetAvailableViaPingAsync()
+        {
+            try
+            {
+                using (var ping = new Ping())
+                {
+                    var reply = await ping.SendPingAsync("8.8.8.8", 3000); // Google's DNS server
+                    return reply.Status == IPStatus.Success;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private void Usb_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(new UsbPage());
@@ -71,7 +92,18 @@ namespace Telemetri_tasarım_denemesi
 
         private void Home_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new HomePage());
+            Task.Run(() => IsInternetAvailableViaPingAsync().Result)
+            .ContinueWith(t =>
+            {
+                bool isOnline = t.Result;
+                Dispatcher.Invoke(() =>
+                {
+                    if (isOnline)
+                        MainFrame.Navigate(new HomePage());
+                    else
+                        MainFrame.Navigate(new HomePage_noint());
+                });
+            });
             SolarBorder.Background = Brushes.Transparent;
             UsbBorder.Background = Brushes.Transparent;
             dataBorder.Background = Brushes.Transparent;
@@ -92,10 +124,7 @@ namespace Telemetri_tasarım_denemesi
             }
             else
             {
-               if (MessageBox.Show("Kapatmak istediğinize emin misiniz?", "Uyarı!", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-               {
-                this.Close();
-               } 
+               this.Close();
             }
 
             

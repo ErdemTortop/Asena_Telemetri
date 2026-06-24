@@ -9,7 +9,7 @@
       FontFamily="Segoe UI Semibold"
       d:DesignHeight="800" d:DesignWidth="1300"
       Title="UsbPage">
-      
+
 
 
 
@@ -50,17 +50,11 @@
                 </Border>
 
                 <Border Background="#262835" CornerRadius="20" BorderThickness="0" Grid.Row="3" Width="200" Height="80">
-                    <Button Style="{StaticResource OrangeHoverButton}" x:Name="PortBaglantıIptalButon" Click="PortIptalButon_Click" >
+                    <Button Style="{StaticResource OrangeHoverButton}" x:Name="PortBaglantıIptalButon" Click="PortIptalButon_Click" OverridesDefaultStyle="True" IsEnabledChanged="UpdateCancelButtonAppearance" IsEnabled="False" >
                         <TextBlock  Grid.Row="3" TextWrapping="Wrap" Foreground="#E2E8F0" Text="Bağlantıyı Kes" FontSize="20" FontWeight="Light"/>
                     </Button>
                 </Border>
-
-
-                <Border Background="#262835" BorderThickness="0" CornerRadius="20" Grid.Row="5" Width="200" Height="80">
-                    <Button Style="{StaticResource OrangeHoverButton}" x:Name="PortBaglantıYenileButon" Click="PortYenileButon_Click" >
-                        <TextBlock Grid.Row="3" TextWrapping="Wrap" Foreground="#E2E8F0" Text="Portları Yenile" FontSize="20" FontWeight="Light"/>
-                    </Button>
-                </Border>
+                <CheckBox x:Name="MakeThisHomePage" Content="Burayı ana sayfa yap" HorizontalAlignment="Left" Margin="-50,37,0,0" Grid.Row="6" VerticalAlignment="Top" Foreground="White" Checked="CheckBox_Checked" Visibility="Visible" MouseEnter="CheckBox_MouseEnter" MouseLeave="MakeThisHomePage_MouseLeave" Unchecked="MakeThisHomePage_Unchecked" Opacity="0"/>
             </Grid>
             <Grid Grid.Column="3">
                 <Grid.RowDefinitions>
@@ -102,7 +96,7 @@
                             <TextBlock Text="Rate :" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground=" #E2E8F0" FontWeight="Light" />
                         </Border>
                         <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"  >
-                            <ComboBox  FontSize="26" x:Name="PortComboBox" Margin="30,60,30,60" Foreground="#14191F" FontWeight="Light" OpacityMask="#FF14191F"  />
+                            <ComboBox  FontSize="26" x:Name="PortComboBox" Margin="30,60,30,60" Foreground="#14191F" FontWeight="Light" OpacityMask="#FF14191F" DropDownOpened="PortComboBox_opened" SelectionChanged="PortComboBox_SelectionChanged"  />
                         </Border>
                         <Border Grid.Row="2" Grid.Column="1" >
                             <ComboBox x:Name="RateBox" Margin="30,60,30,60" Background="#E2E8F0" FontWeight="Light"  Foreground="#14191F" FontSize="26"/>
